@@ -77,7 +77,7 @@ help(){
 	echo "|	selinux			=	SELINUX Enforcing Mode	   	   |"
 	echo "|	epel			=	EPEL Install ( CentOS Only )	   |"
 	echo "|	exit			=	Exit From Shell		   	   |"
-	echo "|	Rootkit			=	Rootkit Hunter		       |"	
+	echo "|	rootkit			=	Rootkit Hunter		           |"	
 	echo "+==========================================================================+"	
 }
 
@@ -120,6 +120,20 @@ else
 			clamscan -ir /var/www/html/
 			echo " Anti-virus Installation & Virus Scan Completed "
 fi
+}
+
+rootkit(){
+	echo " Installation starts in"
+	sleep 1
+	echo "3"
+	sleep 1
+	echo "2"
+	sleep 1
+	echo "1"
+	yum install rkhunter -y
+	echo " Rookit Scan Starts"
+	rkhunter --check
+	echo "Rootkit Hunter Installation completed"
 }
 
 mysql(){
@@ -262,6 +276,8 @@ echo -n "WYM > " & read input
 		"install firewall")  firewall
 		;;
 		"install av") fresh
+		;;
+		"rootkit") rootkit
 		;;
 		"selinux") selinux
 		;;
