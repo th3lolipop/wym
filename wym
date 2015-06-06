@@ -1,0 +1,270 @@
+#!/bin/bash
+
+echo "+=============================================+"
+echo "| >>>>>>>>>>>  *This is WYM Shell* <<<<<<<<<< |"
+echo "+=============================================+"
+
+
+if [ $(whoami) = root ]
+ then 
+	echo "Welcome *Root* User"
+ else 
+	echo "Please login with >> Root << "
+        su
+        exit
+fi
+echo "CPU            : $(lscpu | grep name | awk '{print $3,$4,$5,$6,$7,$8,$9,$10,$11}')"
+
+if [ $(cat /etc/redhat-release | awk '{print $1}' ) = Fedora ]
+then
+ 	echo "Your OS is     : $(cat /etc/redhat-release | awk '{print $1,$3,$4,$5}' ) "
+elif [ $(cat /etc/redhat-release | awk '{print $1}' ) = CentOS ]
+	then 
+		echo "Your OS is   : $(cat /etc/redhat-release | awk '{print $1}' ) "
+	elif  [ $(cat etc/redhat-release | awk '{print $1}' ) = RedHat ]
+		then 
+			echo "Your OS is   : $(cat /etc/redhat-release | awk '{print $1,$3}' ) " 
+else
+	echo " Error "
+	exit
+fi
+
+echo "Kernel Version : $(uname -r)"
+echo "Date           : $(date)"
+sleep 1
+
+echo "If you need help ~ Type >>  help  <<"
+
+about(){
+	echo "This script is written by 
+	Wai Yan Min ( Tharpu ) 
+	Version 2.0"
+}
+
+php(){
+
+if [ -f /etc/httpd/conf.d/php.conf ]
+then 
+	echo "This program is already installed and latest version"
+else	
+	echo " Installation starts in"
+			sleep 1
+			echo "3"
+			sleep 1
+			echo "2"
+			sleep 1
+			echo "1"
+			yum install php php-mysql php-mbstring php-mcrypt php-pspell php-gd -y
+			systemctl restart httpd 
+			echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
+			echo " PHP Installation Completed "
+fi
+}
+
+help(){
+	echo "+==========================================================================+"
+	echo "|   >>>>>>>>>>>>>>>       How Can I Help ?            <<<<<<<<<<<<<<<<     |"
+	echo "|   -----*     Please Choose Functions What u like to do        *-----     |"
+	echo "+==========================================================================+"
+	echo "|	about			=	Shell's version		   	   |"
+	echo "|	update			=	Update Packages            	   |"
+	echo "|	install httpd		=	HTTPD			   	   |"
+	echo "|	install php		=	PHP			   	   |"
+	echo "|	install mysql		=	Mariadb MySQL		   	   |"
+	echo "|	mysql_complete		=	SQL Complete Installation	   |"
+	echo "|	install av		=	Anti-virus & Scan Virus	   	   |"
+	echo "|	install firewall	=	Firewalld		   	   |"
+	echo "|	selinux			=	SELINUX Enforcing Mode	   	   |"
+	echo "|	epel			=	EPEL Install ( CentOS Only )	   |"
+	echo "|	exit			=	Exit From Shell		   	   |"
+	echo "|	Rootkit			=	Rootkit Hunter		       |"	
+	echo "+==========================================================================+"	
+}
+
+selinux(){
+	if [ $(getenforce) = Enforcing ]
+then	
+	echo "SELINUX is in Enforcing Mode"
+elif [ $(getenforce) = Permissive ]
+then
+	setenforce 1	
+	echo "SELINUX is in Permissive Mode but now changed to Enforcing Mode"
+else 
+	setenforce 1
+	echo "SELINUX is in Disable mode but now changed to Enforcing Mode"
+fi
+}
+
+epel(){
+	yum install epel-release -y
+}
+
+fresh(){
+if [ -f /etc/freshclam.conf ]
+then 
+	echo "This program is already installed and latest version"
+else
+	 echo " Installation starts in"
+			sleep 1
+			echo "3"
+			sleep 1
+			echo "2"
+			sleep 1
+			echo "1"
+			yum install clamav clamav-update clamav-scanner -y
+			sed -i 's/Example/#Example/' /etc/freshclam.conf
+			echo " Your Virus Database Need to update ! " 
+			sleep 2
+			freshclam
+			echo " Virus Scan Starts ! "
+			clamscan -ir /var/www/html/
+			echo " Anti-virus Installation & Virus Scan Completed "
+fi
+}
+
+mysql(){
+if [ -f /etc/my.cnf ]
+	then 
+		echo "This program is already installed and latest version"
+	elif	[ -f /etc/mysql/my.cnf ]
+		then
+		echo "This program is already installed and latest version"
+			else
+			echo " Installation starts in"
+			sleep 1
+			echo "3"
+			sleep 1
+			echo "2"
+			sleep 1
+			echo "1"
+			yum install mariabd mariadb-server -y
+			systemctl enable mariadb 
+			systemctl enable mariadb
+			echo " Mariadb Installation Completed "
+fi
+}
+
+httpd(){
+if [ -f /etc/httpd/conf/httpd.conf ]
+then 
+	echo "This program is already installed and latest version"
+else
+	echo " Installation starts in "
+			sleep 1
+			echo "3"
+			sleep 1
+			echo "2"
+			sleep 1
+			echo "1"
+			yum install httpd -y
+			systemctl start httpd	
+			systemctl enable httpd
+			echo " Apache Installation Completed "
+fi
+}
+
+update(){
+	yum update -y
+}
+	
+firewall(){
+if [ -f /etc/firewalld/firewalld.conf ]
+then 
+	echo "This program is already installed and latest version"
+else
+	 echo " Installation starts in"
+			sleep 1
+			echo "3"
+			sleep 1
+			echo "2"
+			sleep 1
+			echo "1"
+			yum install firewalld -y 
+			systemctl start firewalld
+			systemctl enable firewalld
+			firewall-cmd --zone=public --add-service=http --permanent
+			firewall-cmd --zone=public --add-port=80/tcp --permanent
+			firewall-cmd --zone=public --add-port=10000/tcp --permanent
+			firewall-cmd --reload
+			echo " Firewall Installation Completed "
+fi
+}
+
+mysql_complete(){
+	read -p " Define MYSQL root user password: " mysql rootpwd
+	SECURE_MYSQL=$(expect -c "
+
+	set timeout 10
+	spawn mysql_secure_installation
+
+	expect \"Enter current password for root ( enter for none ):\"
+	send \"$MYSQL\r\"
+
+	expect \"Change the root password?\"
+	send \"y\r\"
+
+	expect \"New Password:\"
+	send \"$mysql rootpwd\r\"
+
+	expect \"Re-enter new password:\"
+	send \"$mysql rootpwd\r\"
+
+	expect \"Remove anonymous users?\"
+	send \"y\r"
+
+	expect \"Disallow root login remotely?\"
+	send \"y\r"
+
+	expect \"Remove test database and access to it?\"
+	send \"y\r"
+
+	expect \"reload privilege tables now?\"
+	send \"y\r"
+
+	expect ef
+	")
+
+	echo "$SECURE_MYSQL"
+}
+
+while true
+do
+echo -n "WYM > " & read input
+	case $input in
+		"about") about
+		;;
+		"exit")
+		echo "Thank You , Have A Nice Day !!!"
+		exit
+		;;
+		"help") help
+		;;
+		"epel")epel
+		;;
+		"update") update
+		;;
+		"install httpd") httpd
+		;;
+		"install php") php
+		;;
+		"install mysql") mysql
+		;;
+		"mysql_complete") echo " MySQL Completion starts in"
+			sleep 1
+			echo "3"
+			sleep 1
+			echo "2"
+			sleep 1
+			echo "1"			
+			mysql_complete
+			echo " MySQL Installation Completed "
+		;;
+		"install firewall")  firewall
+		;;
+		"install av") fresh
+		;;
+		"selinux") selinux
+		;;
+		*) eval $input	
+esac
+done
