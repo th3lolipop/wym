@@ -96,7 +96,12 @@ fi
 }
 
 epel(){
-	yum install epel-release -y
+if [ $(cat /etc/redhat-release | awk '{print $1}' ) = CentOS ]
+	then
+			yum install epel-release -y
+	else 
+			echo "Your Operation System isn't *CentOS*"
+fi
 }
 
 fresh(){
@@ -125,7 +130,7 @@ fi
 rootkit(){
 if [ -f /etc/rkhunter.conf ]
 	then 
-		echo "This program is already installed"
+		echo "This program is already installed and latest version"
 	else
 		echo " Installation starts in"
 		sleep 1
