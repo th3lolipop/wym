@@ -123,17 +123,22 @@ fi
 }
 
 rootkit(){
-	echo " Installation starts in"
-	sleep 1
-	echo "3"
-	sleep 1
-	echo "2"
-	sleep 1
-	echo "1"
-	yum install rkhunter -y
-	echo " Rookit Scan Starts"
-	rkhunter --check
-	echo "Rootkit Hunter Installation completed"
+if [ -f /etc/rkhunter.conf ]
+	then 
+		echo "This program is already installed"
+	else
+		echo " Installation starts in"
+		sleep 1
+		echo "3"
+		sleep 1
+		echo "2"
+		sleep 1
+		echo "1"
+		yum install rkhunter -y
+		echo " Rookit Scan Starts"
+		rkhunter --check
+		echo "Rootkit Hunter Installation completed"
+fi
 }
 
 mysql(){
