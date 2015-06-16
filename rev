@@ -1,0 +1,95 @@
+#!/bin/bash
+
+if [ $(cat /etc/redhat-release | awk '{print $1}' ) = Fedora ]
+then
+ 	echo " Welcome Sir !"
+elif [ $(cat /etc/redhat-release | awk '{print $1}' ) = CentOS ]
+	then 
+		echo " Welcome Sir !"
+	elif  [ $(cat etc/redhat-release | awk '{print $1}' ) = RedHat ]
+		then 
+			echo " Welcome Sir !"
+else
+	echo " Error "
+	exit
+fi
+
+#Check
+
+if [ $(id -u) = 0 ]
+then 
+	echo " Check OK ! "
+else 
+	echo " Check Error "
+	exit
+fi
+
+install_lamp (){
+	echo " Installation Start !"
+	yum install httpd -y
+	systemctl start httpd
+	systemctl enable httpd
+	echo " Apache Installation Completed "
+
+
+	echo " Installation Start !"
+	yum install php php-mysql php-mbstring php-mcrypt php-pspell php-gd -y
+	systemctl restart httpd 
+	echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
+	echo " PHP Installation Completed "
+
+	echo " Installation Start  in "
+	sleep 1
+	echo "3"
+	sleep 1
+	echo "2"
+	sleep 1
+	echo "1"
+	yum install mariabd mariadb-server -y
+	systemctl enable mariadb 
+	systemctl enable mariadb
+	echo " MariaDB MySQL Installation Completed "
+
+}
+
+install_firewall(){
+	echo " Installation Start in"
+	sleep 1
+	echo " 				3"
+	sleep 1
+	echo "				2"
+	sleep 1
+	echo "				1"
+	yum install firewalld -y
+	systemctl start firewalld
+	systemctl enable firewalld
+	firewall-cmd --zone=public --add-service=http --permanent
+	firewall-cmd --zone=public --add-port=80/tcp --permanent
+	firewall-cmd --zone=public --add-port=10000/tcp --permanent
+	firewall-cmd --reload
+	echo " Firewall Installation Completed !"
+}
+
+install_antivirus(){
+	echo " Installation Start !"
+	yum install clamav clamav-update clamav-scanner -y
+	sed -i 's/Example/#Example/' /etc/freshclam.conf
+	freshclam
+	clamscan -ir /var/www/html/
+	echo " Anti-virus Installation Completed !"
+}
+
+while true
+do
+read -p " wym> " input
+
+case $input in
+	install_lamp) install_lamp
+	;;
+	install_firewall) install_firewall
+	;;
+	install_antivirus) install_antivirus
+	;;
+	*) eval $input
+esac
+done
