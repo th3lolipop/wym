@@ -140,8 +140,8 @@ if [ -f /etc/rkhunter.conf ]
 		sleep 1
 		echo "1"
 		yum install rkhunter -y
+fi	
 		echo " Rookit Scan Starts"
-fi
 		rkhunter --check
 		echo "Rootkit Hunter Installation completed"
 }
