@@ -141,9 +141,9 @@ if [ -f /etc/rkhunter.conf ]
 		echo "1"
 		yum install rkhunter -y
 		echo " Rookit Scan Starts"
+fi
 		rkhunter --check
 		echo "Rootkit Hunter Installation completed"
-fi
 }
 
 mysql(){
