@@ -54,7 +54,7 @@ else
 			echo "2"
 			sleep 1
 			echo "1"
-			yum install php php-mysql php-mbstring php-mcrypt php-pspell php-gd -y
+			dnf install php php-mysql php-mbstring php-mcrypt php-pspell php-gd -y
 			systemctl restart httpd 
 			echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
 			echo " PHP Installation Completed "
@@ -98,7 +98,7 @@ fi
 epel(){
 if [ $(cat /etc/redhat-release | awk '{print $1}' ) = CentOS ]
 	then
-			yum install epel-release -y
+			dnf install epel-release -y
 	else 
 			echo "Your Operation System isn't *CentOS*"
 fi
@@ -116,7 +116,7 @@ else
 			echo "2"
 			sleep 1
 			echo "1"
-			yum install clamav clamav-update clamav-scanner -y
+			dnf install clamav clamav-update clamav-scanner -y
 			sed -i 's/Example/#Example/' /etc/freshclam.conf
 			echo " Your Virus Database Need to update ! " 
 			sleep 2
@@ -139,7 +139,7 @@ if [ -f /etc/rkhunter.conf ]
 		echo "2"
 		sleep 1
 		echo "1"
-		yum install rkhunter -y
+		dnf install rkhunter -y
 fi	
 		echo " Rookit Scan Starts"
 		rkhunter --check
@@ -161,7 +161,7 @@ if [ -f /etc/my.cnf ]
 			echo "2"
 			sleep 1
 			echo "1"
-			yum install mariabd mariadb-server -y
+			dnf install mariabd mariadb-server -y
 			systemctl enable mariadb 
 			systemctl enable mariadb
 			echo " Mariadb Installation Completed "
@@ -180,7 +180,7 @@ else
 			echo "2"
 			sleep 1
 			echo "1"
-			yum install httpd -y
+			dnf install httpd -y
 			systemctl start httpd	
 			systemctl enable httpd
 			echo " Apache Installation Completed "
@@ -188,7 +188,7 @@ fi
 }
 
 update(){
-	yum update -y
+	dnf update -y
 }
 	
 firewall(){
@@ -203,7 +203,7 @@ else
 			echo "2"
 			sleep 1
 			echo "1"
-			yum install firewalld -y 
+			dnf install firewalld -y 
 			systemctl start firewalld
 			systemctl enable firewalld
 			firewall-cmd --zone=public --add-service=http --permanent
