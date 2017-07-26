@@ -1,0 +1,13 @@
+
+	
+#!bin/bash
+	echo "SELINUX is in Disable mode but now changed to Enforcing Mode"
+	echo "SELINUX is in Enforcing Mode"
+	echo "SELINUX is in Permissive Mode"
+elif [ $(getenforce) = Permissive ]
+else 
+fi
+if [ $(getenforce) = Enforcing ]
+	setenforce=1
+then	
+then	
