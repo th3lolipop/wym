@@ -1,0 +1,10 @@
+#!/bin/bash
+
+hexchars="0123456789ABCDEF"
+end=$( for i in {1..10} ; do echo -n ${hexchars:$(( $RANDOM % 16 )):1} ; done | sed -e 's/\(..\)/:\1/g' )
+MAC=00$end
+sed -i '/MACADDR=/d' /etc/sysconfig/network-scripts/ifcfg-Hi_Wi-Fi
+echo "MACADDR=$MAC" >> /etc/sysconfig/network-scripts/ifcfg-Hi_Wi-Fi
+echo "$MAC" > /root/newmacaddress
+sleep 1
+systemctl restart NetworkManager && echo $MAC
