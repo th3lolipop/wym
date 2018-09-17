@@ -4,6 +4,7 @@ echo "+=============================================+"
 echo "| >>>>>>>>>>>  *This is WYM Shell* <<<<<<<<<< |"
 echo "+=============================================+"
 
+
 if [ $(whoami) = root ]
  then 
 	echo "Welcome *Root* User"
@@ -37,7 +38,7 @@ echo "If you need help ~ Type >>  help  <<"
 about(){
 	echo "This script is written by 
 	Wai Yan Min ( Tharpu ) 
-	Version 2.0"
+	Version 3.0"
 }
 
 php(){
@@ -53,7 +54,7 @@ else
 			echo "2"
 			sleep 1
 			echo "1"
-			dnf install php php-mysql php-mbstring php-mcrypt php-pspell php-gd -y
+			yum install php php-mysql php-mbstring php-mcrypt php-pspell php-gd -y
 			systemctl restart httpd 
 			echo "<?php phpinfo(); ?>" > /var/www/html/phpinfo.php
 			echo " PHP Installation Completed "
@@ -97,7 +98,7 @@ fi
 epel(){
 if [ $(cat /etc/redhat-release | awk '{print $1}' ) = CentOS ]
 	then
-			dnf install epel-release -y
+			yum install epel-release -y
 	else 
 			echo "Your Operation System isn't *CentOS*"
 fi
@@ -115,7 +116,7 @@ else
 			echo "2"
 			sleep 1
 			echo "1"
-			dnf install clamav clamav-update clamav-scanner -y
+			yum install clamav clamav-update clamav-scanner -y
 			sed -i 's/Example/#Example/' /etc/freshclam.conf
 			echo " Your Virus Database Need to update ! " 
 			sleep 2
@@ -138,7 +139,7 @@ if [ -f /etc/rkhunter.conf ]
 		echo "2"
 		sleep 1
 		echo "1"
-		dnf install rkhunter -y
+		yum install rkhunter -y
 fi	
 		echo " Rookit Scan Starts"
 		rkhunter --check
@@ -160,7 +161,7 @@ if [ -f /etc/my.cnf ]
 			echo "2"
 			sleep 1
 			echo "1"
-			dnf install mariabd mariadb-server -y
+			yum install mariabd mariadb-server -y
 			systemctl enable mariadb 
 			systemctl start mariadb
 			echo " Mariadb Installation Completed "
@@ -179,7 +180,7 @@ else
 			echo "2"
 			sleep 1
 			echo "1"
-			dnf install httpd -y
+			yum install httpd -y
 			systemctl start httpd	
 			systemctl enable httpd
 			echo " Apache Installation Completed "
@@ -187,7 +188,7 @@ fi
 }
 
 update(){
-	dnf update -y
+	yum update -y
 }
 	
 firewall(){
@@ -202,7 +203,7 @@ else
 			echo "2"
 			sleep 1
 			echo "1"
-			dnf install firewalld -y 
+			yum install firewalld -y 
 			systemctl start firewalld
 			systemctl enable firewalld
 			firewall-cmd --zone=public --add-service=http --permanent
