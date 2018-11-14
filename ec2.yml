@@ -1,0 +1,29 @@
+---
+- name: Create a new Ansible_Demo EC2 instance
+  hosts: localhost
+  gather_facts: False
+
+  vars:
+      region: ap-southeast-1
+      instance_type: t2.micro
+      ami: ami-76144b0a  # RHEL7
+      keypair: waiyanmin # pem file name
+  
+  tasks:
+
+    - name: Create an ec2 instance
+      ec2:
+         key_name: "{{ keypair }}"
+         group: default  # security group name
+         instance_type: "{{ instance_type }}"
+         image: "{{ ami }}"
+         wait: true
+         region: "{{ region }}"
+         count: 1  # default
+         count_tag:
+            Name: Ansible_Demo
+         instance_tags:
+            Name: Ansible_Demo
+         vpc_subnet_id: subnet-b233f4eb
+         assign_public_ip: yes
+      register: ec2
