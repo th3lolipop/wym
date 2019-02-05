@@ -20,7 +20,7 @@
          wait: true
          region: "{{ region }}"
          count: 1  # default
-         instance_ids: i-04ced0f72ba0a5533
+         instance_ids: your_instance_id
          state: absent
          count_tag:
             Name: Ansible_Demo
